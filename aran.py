@@ -1,27 +1,10 @@
-import itchat, time, requests, json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+import itchat, time
 from itchat.content import *
+from core import *
 
-tuling_key = "c697910a18b540d4a63838871ee9a671"
 DEBUG = True
-
-def tuling_auto_reply(msg, uid):
-    if tuling_key:
-        url = "http://www.tuling123.com/openapi/api"
-        user_id = uid.replace('@', '')[:30]
-        body = {'key': tuling_key, 'info': msg.encode('utf8'), 'userid': user_id}
-        if DEBUG:
-            print 'Body -->', body
-        r = requests.post(url, data = body)
-        respond = json.loads(r.text)
-
-        print respond
-        result = ''
-        if respond['code'] == 100000:
-            result = respond['text']
-        print 'ROBOT:', result
-        return result
-    else:
-        return 'test'
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
