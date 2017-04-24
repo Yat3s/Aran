@@ -22,6 +22,9 @@ def tuling_auto_reply(msg, uid):
         elif code == 302000: # News list
             for item in respond['list']:
                 result += u'【'+ item['source'] + u'】' + item['article'] + '\n' + item['detailurl'] + '\n\n'
+        elif code == 308000: # Cook menu
+            for item in respond['list']:
+                result += u'【'+ item['name'] + u'】' + item['info'] + '\n' + item['detailurl'] + '\n\n'
         print 'ROBOT---->', result
         return result
     else:
