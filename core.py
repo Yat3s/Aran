@@ -28,4 +28,4 @@ def tuling_auto_reply(msg, uid):
         print 'ROBOT---->', result
         return result
     else:
-        return 'test'
+        return u'我知道啦'
