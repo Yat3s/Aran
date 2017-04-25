@@ -75,15 +75,17 @@ def send_image(url, from_user_id):
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
-    print jsonify(msg)
     content =  msg['Text'].replace(NAME, '')
     from_user_id = msg['FromUserName']
     from_user_name = msg['User']['NickName']
     if DEBUG:
-        print 'Content -->', content
-        print 'fromUserId -->', from_user_id
-    if not process_command(content, from_user_id, from_user_name):
-        itchat.send(auto_reply(content, from_user_id), from_user_id)
+        print '[Private] ', from_user_name, '\t ---> ', content
+    intercept_cmd = process_command(content, from_user_id, from_user_name)
+    if not intercept_cmd:
+        reply = auto_reply(content, from_user_id)
+        itchat.send(reply, from_user_id)
+        if DEBUG:
+            print '[Private] ', 'Aran', '\t ===> ', reply, '[CMD]' if intercept_cmd else '[Auto]'
 
 
 @itchat.msg_register(TEXT, isGroupChat=True)
@@ -91,15 +93,19 @@ def text_reply(msg):
     content = msg['Content'].replace('@', '')
     from_user_id = msg['FromUserName']
     from_user_name = msg['ActualNickName']
+    isAtMe = msg['isAt'] or NAME.lower() in content or NAME in content
     if DEBUG:
-        print from_user_name, ' ---> ', content
+        print '[Group] ', from_user_name, '\t ---> ', content, ' (AtMe)' if isAtMe else ''
 
-    if msg['isAt'] or NAME.lower() in content or NAME in content:
+    if isAtMe:
         content = content.replace(NAME, '').replace(NAME.lower(), '')
-        print 'Group content -->', content
-        if not process_command(content, from_user_id, from_user_name):
+        intercept_cmd = process_command(content, from_user_id, from_user_name)
+        if not intercept_cmd:
             reply_prefix = '' if from_user_name == 'unknown' else '@' + from_user_name + '\n'
-            itchat.send(reply_prefix + auto_reply(content, from_user_id), from_user_id)
+            reply = reply_prefix + auto_reply(content, from_user_id)
+            itchat.send(reply, from_user_id)
+            if DEBUG:
+                print '[Group] ', 'Aran', '\t ===> ', reply, '[CMD]' if intercept_cmd else '[Auto]'
 
 
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
