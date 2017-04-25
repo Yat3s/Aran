@@ -6,11 +6,20 @@ from core import *
 
 DEBUG = True
 NAME = 'Aran'
-AVATAR = 'https://avatars3.githubusercontent.com/u/13028340'
+AVATAR = 'http://i4.buimg.com/4851/43ac151be1c2697e.jpg'
+ADMIN_USER_ID = '@8beb882e90aa7e5eb904f2b5f7ab0f411b3f85e63c00bd104bbab5589ee4bd01'
+
+def group_send(friend_array, content):
+    for friend in friend_array:
+        itchat.send(content, friend['UserName'])
 
 def process_command(content, from_user_id):
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
+        itchat.send(u'嘻嘻，你猜猜哪个是我？', from_user_id)
+        return True
+    if u'群发' in content and from_user_id == ADMIN_USER_ID:
+        group_send(itchat.get_friends(), content[content.index(u'群发：'):])
         return True
     return False
 
