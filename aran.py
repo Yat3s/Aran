@@ -4,7 +4,6 @@ import itchat, time, io
 from itchat.content import *
 from core import *
 from utils import *
-from prettytable import PrettyTable
 
 DEBUG = True
 NAME = 'Aran'
@@ -22,7 +21,6 @@ def process_command(content, from_user_id):
         return True
 
     if from_user_id == ADMIN_USER_ID:
-
         if u'[Search]' in content:
             keyword = content[content.index(u']') + 1:]
             print 'Search-->', keyword
@@ -41,12 +39,13 @@ def process_command(content, from_user_id):
             return True
 
         if u'[Friends]' == content:
-            t = PrettyTable(['Name', 'Gender', 'ID'])
-            for friend in itchat.get_friends():
-                gender = '男' if friend['Sex'] == 1 else '女'
-                t.add_row([friend['NickName'], gender, friend['Alias']])
-            itchat.send(str(t).decode('utf8'), from_user_id)
-            print t
+            friends = itchat.get_friends()
+            friend_result = u'共计获取到 ' + str(len(friends)) + u' 位好友信息\n\n'
+            for friend in friends:
+                gender = u'男' if friend['Sex'] == 1 else u'女'
+                friend_result += friend['NickName'] + ' ---- ' + friend['Alias'] + ' ---- ' + gender + '\n'
+            itchat.send(friend_result, from_user_id)
+            print friend_result
             return True
     return False
 
