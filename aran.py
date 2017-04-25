@@ -3,25 +3,67 @@
 import itchat, time, io
 from itchat.content import *
 from core import *
+from utils import *
+from prettytable import PrettyTable
 
 DEBUG = True
 NAME = 'Aran'
 AVATAR = 'http://i4.buimg.com/4851/43ac151be1c2697e.jpg'
 ADMIN_USER_ID = '@8beb882e90aa7e5eb904f2b5f7ab0f411b3f85e63c00bd104bbab5589ee4bd01'
 
-def group_send(friend_array, content):
-    for friend in friend_array:
-        itchat.send(content, friend['UserName'])
-
 def process_command(content, from_user_id):
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
-        itchat.send(u'嘻嘻，你猜猜哪个是我？', from_user_id)
+        itchat.send(u'嘻嘻ლ(＾ω＾ლ)，你猜猜哪个是我？', from_user_id)
         return True
-    if u'群发' in content and from_user_id == ADMIN_USER_ID:
-        group_send(itchat.get_friends(), content[content.index(u'群发：'):])
+
+    if u'Aran加我' in content:
+        itchat.add_friend(from_user_id, verifyContent=u'嘻嘻，我可以添加你为好友吗？')
         return True
+
+    if from_user_id == ADMIN_USER_ID:
+
+        if u'[Search]' in content:
+            keyword = content[content.index(u']') + 1:]
+            print 'Search-->', keyword
+            result = ''
+            for item in itchat.search_friends(name = keyword):
+                result += jsonify(item) + '\n'
+            itchat.send(u'没有搜索到结果' if result == '' else result, from_user_id)
+            return True
+
+        if u'[GroupSend]' in content :
+            group_send(itchat.get_friends(), content[content.index(u']') + 1:])
+            return True
+
+        if u'[Info]' == content:
+            itchat.send(jsonify(itchat.search_friends()), from_user_id)
+            return True
+
+        if u'[Friends]' == content:
+            t = PrettyTable(['Name', 'Gender', 'ID'])
+            for friend in itchat.get_friends():
+                gender = '男' if friend['Sex'] == 1 else '女'
+                t.add_row([friend['NickName'], gender, friend['Alias']])
+            itchat.send(str(t).decode('utf8'), from_user_id)
+            print t
+            return True
     return False
+
+
+def group_send(users, content):
+    for user in users:
+        itchat.send(content, user['UserName'])
+
+# Send image by URL
+def send_image(url, from_user_id):
+    r = requests.get(url, stream=True)
+    imageStorage = io.BytesIO()
+    for block in r.iter_content(1024):
+        imageStorage.write(block)
+    imageStorage.seek(0)
+    itchat.send_image(imageStorage, from_user_id)
+
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
@@ -32,6 +74,7 @@ def text_reply(msg):
         print 'fromUserId -->', from_user_id
     if not process_command(content, from_user_id):
         itchat.send(auto_reply(content, from_user_id), from_user_id)
+
 
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
@@ -48,23 +91,18 @@ def text_reply(msg):
             reply_prefix = '' if from_user_name == 'unknown' else '@' + from_user_name + '\n'
             itchat.send(reply_prefix + auto_reply(content, from_user_id), from_user_id)
 
+
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
     msg['Text'](msg['FileName'])
     return '@%s@%s' % ({'Picture': 'img', 'Video': 'vid'}.get(msg['Type'], 'fil'), msg['FileName'])
+
 
 @itchat.msg_register(FRIENDS)
 def add_friend(msg):
     itchat.add_friend(**msg['Text'])
     itchat.send_msg('Nice to meet you!', msg['RecommendInfo']['UserName'])
 
-def send_image(url, from_user_id):
-    r = requests.get(url, stream=True)
-    imageStorage = io.BytesIO()
-    for block in r.iter_content(1024):
-        imageStorage.write(block)
-    imageStorage.seek(0)
-    itchat.send_image(imageStorage, from_user_id)
 
 itchat.auto_login(True)
 itchat.run()
