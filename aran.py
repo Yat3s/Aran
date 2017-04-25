@@ -18,8 +18,9 @@ def process_command(content, from_user_id, from_user_name):
         itchat.send(u'嘻嘻ლ(＾ω＾ლ)，你猜猜哪个是我？', from_user_id)
         return True
 
-    if u'Aran加我' in content:
+    if u'加我加我' in content:
         itchat.add_friend(from_user_id, verifyContent=u'嘻嘻，我可以添加你为好友吗？')
+        itchat.send(u'好的，我已经添加 ' + from_user_name + u' 为好友了', from_user_id)
         return True
 
     if isAdmin:
@@ -87,12 +88,11 @@ def text_reply(msg):
 
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
-    if DEBUG:
-        print 'ActualNickName -->', msg['ActualNickName']
-
     content = msg['Content'].replace('@', '')
     from_user_id = msg['FromUserName']
     from_user_name = msg['ActualNickName']
+    if DEBUG:
+        print from_user_name, ' ---> ', content
 
     if msg['isAt'] or NAME.lower() in content or NAME in content:
         content = content.replace(NAME, '').replace(NAME.lower(), '')
@@ -110,8 +110,9 @@ def download_files(msg):
 
 @itchat.msg_register(FRIENDS)
 def add_friend(msg):
+    gender = u'小帅哥' if msg['User']['Sex'] == 1 else u'小美女'
     itchat.add_friend(**msg['Text'])
-    itchat.send_msg('Nice to meet you!', msg['RecommendInfo']['UserName'])
+    itchat.send_msg(u'Hi\n, Wow又认识一位' + gender + u'，好开心~Mua', msg['RecommendInfo']['UserName'])
 
 
 itchat.auto_login(True)
