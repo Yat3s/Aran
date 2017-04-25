@@ -3,7 +3,8 @@
 import requests, json
 tuling_key = "c697910a18b540d4a63838871ee9a671"
 
-def tuling_auto_reply(msg, uid):
+def auto_reply(msg, uid):
+    print 'Input message -->', msg
     if tuling_key:
         url = "http://www.tuling123.com/openapi/api"
         user_id = uid.replace('@', '')[:30]
