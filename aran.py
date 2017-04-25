@@ -8,9 +8,11 @@ from utils import *
 DEBUG = True
 NAME = 'Aran'
 AVATAR = 'http://i4.buimg.com/4851/43ac151be1c2697e.jpg'
-ADMIN_USER_ID = '@0a23553efaec934aa41412da0061be18f3dbd4044c00d5e044bc3d9920e5b9fb'
+ADMIN_NAME = 'Yat3s'
 
-def process_command(content, from_user_id):
+def process_command(content, from_user_id, from_user_name):
+    isAdmin = from_user_name == ADMIN_NAME
+
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
         itchat.send(u'嘻嘻ლ(＾ω＾ლ)，你猜猜哪个是我？', from_user_id)
@@ -20,7 +22,7 @@ def process_command(content, from_user_id):
         itchat.add_friend(from_user_id, verifyContent=u'嘻嘻，我可以添加你为好友吗？')
         return True
 
-    if from_user_id == ADMIN_USER_ID:
+    if isAdmin:
         if u'[Search]' in content:
             keyword = content[content.index(u']') + 1:]
             print 'Search-->', keyword
@@ -35,7 +37,9 @@ def process_command(content, from_user_id):
             return True
 
         if u'[GroupSend]' in content :
-            group_send(itchat.get_friends(), content[content.index(u']') + 1:])
+            friends = itchat.get_friends()
+            group_send(friends, content[content.index(u']') + 1:])
+            itchat.send(u'已经给 ' + str(len(friends)) + u' 位好友发送了消息' )
             return True
 
         if u'[Info]' == content:
@@ -70,12 +74,14 @@ def send_image(url, from_user_id):
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
+    print jsonify(msg)
     content =  msg['Text'].replace(NAME, '')
     from_user_id = msg['FromUserName']
+    from_user_name = msg['User']['NickName']
     if DEBUG:
         print 'Content -->', content
         print 'fromUserId -->', from_user_id
-    if not process_command(content, from_user_id):
+    if not process_command(content, from_user_id, from_user_name):
         itchat.send(auto_reply(content, from_user_id), from_user_id)
 
 
@@ -90,7 +96,8 @@ def text_reply(msg):
 
     if msg['isAt'] or NAME.lower() in content or NAME in content:
         content = content.replace(NAME, '').replace(NAME.lower(), '')
-        if not process_command(content, from_user_id):
+        print 'Group content -->', content
+        if not process_command(content, from_user_id, from_user_name):
             reply_prefix = '' if from_user_name == 'unknown' else '@' + from_user_name + '\n'
             itchat.send(reply_prefix + auto_reply(content, from_user_id), from_user_id)
 
