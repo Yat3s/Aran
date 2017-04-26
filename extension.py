@@ -33,7 +33,7 @@ def process_command(content, from_user_id, from_user_name):
 
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
-        chatcore.send(u'嘻嘻ლ(＾ω＾ლ)，你猜猜哪个是我？', from_user_id)
+        chatcore.send(u'嘻嘻ლ(＾ω＾ლ)，你觉得我好看吗？', from_user_id)
         return True
 
     if u'加我加我' in content:
@@ -45,6 +45,10 @@ def process_command(content, from_user_id, from_user_name):
         return True
     if u'色情网站' in content or u'黄色网站' in content:
         chatcore.send(u'你可以看看1024，tumblr，91，草榴，等等，如果想知道更多，可以联系我的主人哦嘻嘻ლ(＾ω＾ლ)', from_user_id)
+        return True
+    if u'Draw' in content or u'draw' in content:
+        drawPic(content[4:])
+        chatcore.send_image(fileDir='t.png', toUserName=from_user_id)
         return True
     if u'黄图' in content:
         for url in SEX_PIC_URL:
