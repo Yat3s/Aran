@@ -50,9 +50,8 @@ def download_files(msg):
 
 @chatcore.msg_register(FRIENDS)
 def add_friend(msg):
-    gender = u'小帅哥' if msg['User']['Sex'] == 1 else u'小美女'
     chatcore.add_friend(**msg['Text'])
-    chatcore.send_msg(u'Hi\n, Wow又认识一位' + gender + u'，好开心~Mua', msg['RecommendInfo']['UserName'])
+    chatcore.send_msg(u'Hi\n, Wow又认识一位新朋友好开心，好开心~Mua', msg['RecommendInfo']['UserName'])
 
 chatcore.auto_login(True)
 chatcore.run()

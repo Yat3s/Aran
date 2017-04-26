@@ -23,7 +23,6 @@ def load_messages(core):
     core.send         = send
 
 def get_download_fn(core, url, msgId):
-    print 'Image URL -->', url, msgId, core.loginInfo['skey']
     def download_fn(downloadDir=None):
         params = {
             'msgid': msgId,
