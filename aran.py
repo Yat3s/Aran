@@ -101,7 +101,7 @@ def text_reply(msg):
         content = content.replace(NAME, '').replace(NAME.lower(), '')
         intercept_cmd = process_command(content, from_user_id, from_user_name)
         if not intercept_cmd:
-            reply_prefix = '' if from_user_name == 'unknown' else '@' + from_user_name + '\n'
+            reply_prefix = '' if from_user_name == 'unknown' else '@' + from_user_name + ' '
             reply = reply_prefix + auto_reply(content, from_user_id)
             itchat.send(reply, from_user_id)
             if DEBUG:
@@ -110,8 +110,10 @@ def text_reply(msg):
 
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
-    msg['Text'](msg['FileName'])
-    return '@%s@%s' % ({'Picture': 'img', 'Video': 'vid'}.get(msg['Type'], 'fil'), msg['FileName'])
+    msg['Text'](msg['FileName']) ## Download File
+    # result = '@%s@%s' % ({'Picture': 'img', 'Video': 'vid'}.get(msg['Type'], 'fil'), msg['FileName'])
+    result = ' hello' ## Reply to sender
+    return result
 
 
 @itchat.msg_register(FRIENDS)
