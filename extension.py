@@ -41,7 +41,7 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.send(u'好的，我已经添加 ' + from_user_name + u' 为好友了', from_user_id)
         return True
     if u'自我介绍' in content or u'打个招呼' in content:
-        chatcore.send(u'好的，我已经添加 ' + from_user_name + u' 为好友了', from_user_id)
+        chatcore.send(GROUP_HELP, from_user_id)
         return True
     if u'色情网站' in content or u'黄色网站' in content:
         chatcore.send(u'你可以看看1024，tumblr，91，草榴，等等，如果想知道更多，可以联系我的主人哦嘻嘻ლ(＾ω＾ლ)', from_user_id)
@@ -57,8 +57,8 @@ def process_command(content, from_user_id, from_user_name):
         return True
 
     ## Administrator command
-    if isAdmin:
-        if u'[Search]' in content:
+    if u'[Search]' in content:
+        if isAdmin:
             keyword = content[content.index(u']') + 1:]
             print 'Search-->', keyword
             result = ''
@@ -69,30 +69,48 @@ def process_command(content, from_user_id, from_user_name):
             elif isinstance(search_result, dict):
                 result += jsonify(search_result) + '\n'
             chatcore.send(u'没有搜索到结果' if result == '' else result, from_user_id)
-            return True
-        if u'叫爸爸' in content:
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
+        return True
+    if u'叫爸爸' in content:
+        if isAdmin:
             chatcore.send(u'叶爸爸好~，叶爸爸有什么吩咐吗？', from_user_id)
-            return True
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
+        return True
 
-        if u'[GroupSend]' in content :
+    if u'[GroupSend]' in content :
+        if isAdmin:
             friends = chatcore.get_friends()
             group_send(friends, content[content.index(u']') + 1:])
             chatcore.send(u'已经给 ' + str(len(friends)) + u' 位好友发送了消息' )
-            return True
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
+        return True
 
-        if u'[Info]' == content:
+    if u'[Info]' == content:
+        if isAdmin:
             chatcore.send(jsonify(chatcore.search_friends()), from_user_id)
-            return True
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
+        return True
 
-        if u'[Friends]' == content:
+    if u'[Friends]' == content:
+        if isAdmin:
             friends = chatcore.get_friends()
             friend_result = u'共计获取到 ' + str(len(friends)) + u' 位好友信息\n\n'
             for friend in friends:
                 gender = u'男' if friend['Sex'] == 1 else u'女'
                 friend_result += friend['NickName'] + ' ---- ' + friend['Alias'] + ' ---- ' + gender + '\n'
             chatcore.send(friend_result, from_user_id)
-            print friend_result
-            return True
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
+        return True
+    if u'每日福利' in content:
+        if isAdmin:
+            chatcore.send("嘻嘻~稍等", from_user_id)
+        else:
+            chatcore.send(u'这个指令主人说了不能给被人用哦TT', from_user_id)
     return False
 
 def group_send(users, content):
