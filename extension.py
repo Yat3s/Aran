@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests, json, chatcore, io
+import requests, json, chatcore, io, time
 from config import *
 from utils import *
 
@@ -40,7 +40,19 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.add_friend(from_user_id, verifyContent=u'嘻嘻，我可以添加你为好友吗？')
         chatcore.send(u'好的，我已经添加 ' + from_user_name + u' 为好友了', from_user_id)
         return True
+    if u'自我介绍' in content or u'打个招呼' in content:
+        chatcore.send(u'好的，我已经添加 ' + from_user_name + u' 为好友了', from_user_id)
+        return True
+    if u'色情网站' in content or u'黄色网站' in content:
+        chatcore.send(u'你可以看看1024，tumblr，91，草榴，等等，如果想知道更多，可以联系我的主人哦嘻嘻ლ(＾ω＾ლ)', from_user_id)
+        return True
+    if u'黄图' in content:
+        for url in SEX_PIC_URL:
+            send_image(url, from_user_id)
+            time.sleep(0.2)
+        return True
 
+    ## Administrator command
     if isAdmin:
         if u'[Search]' in content:
             keyword = content[content.index(u']') + 1:]
@@ -53,6 +65,9 @@ def process_command(content, from_user_id, from_user_name):
             elif isinstance(search_result, dict):
                 result += jsonify(search_result) + '\n'
             chatcore.send(u'没有搜索到结果' if result == '' else result, from_user_id)
+            return True
+        if u'叫爸爸' in content:
+            chatcore.send(u'叶爸爸好~，叶爸爸有什么吩咐吗？', from_user_id)
             return True
 
         if u'[GroupSend]' in content :

@@ -4,6 +4,7 @@ import chatcore, time
 from chatcore.content import *
 from extension import *
 from config import *
+from utils import *
 
 @chatcore.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
