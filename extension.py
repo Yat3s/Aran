@@ -30,7 +30,7 @@ def auto_reply(msg, uid):
         return u'我知道啦'
 
 def process_command(content, from_user_id, from_user_name):
-    isAdmin = (from_user_name == ADMIN_NAME) or OPEN_AUTH
+    isAdmin = (from_user_name == ADMIN_NAME)
 
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)

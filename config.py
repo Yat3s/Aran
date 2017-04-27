@@ -6,7 +6,6 @@ DEBUG = True
 NAME = 'Aran'
 AVATAR = 'http://img.67.com/upload/images/2016/05/26/aGV5YW96aG91MTQ2NDI0Njk3NQ==.jpg'
 ADMIN_NAME = 'Yat3s'
-OPEN_AUTH = False
 
 SEX_PIC_URL = [\
 'http://i4.buimg.com/4851/5388a44f9afe566e.jpg', \

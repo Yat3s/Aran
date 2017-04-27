@@ -47,6 +47,13 @@ def download_files(msg):
     result = '@%s@%s' % ({'Picture': 'img', 'Video': 'vid'}.get(msg['Type'], 'fil'), msg['FileName']) ## Reply to sender
     return result
 
+@chatcore.msg_register('Note', isGroupChat = True)
+def get_note(msg):
+    if any(s in msg['Text'] for s in (u'红包', u'转账', u'Red packet')):
+        chatcore.send(u'@Yat3s， 叶爸爸有人发红包了，快抢~', msg['FromUserName'])
+    else:
+        chatcore.send(msg['Text'], msg['FromUserName'])
+
 
 @chatcore.msg_register(FRIENDS)
 def add_friend(msg):
