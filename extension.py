@@ -62,7 +62,10 @@ def process_command(content, from_user_id, from_user_name):
     if u'头像' in content:
         chatcore.send_image(chatcore.get_head_img(chatroomUserName=from_user_id), from_user_id)
         return True
-        pass
+
+    if u'小萌' in content:
+        chatcore.send(u'小萌是全世界最美的女孩子~Mua', from_user_id)
+        return True
 
     ## Administrator command
     if u'[Search]' in content:
@@ -115,7 +118,8 @@ def process_command(content, from_user_id, from_user_name):
         return True
     if u'每日福利' in content:
         if isAdmin:
-            chatcore.send("嘻嘻~稍等", from_user_id)
+            chatcore.send(u"嘻嘻~稍等", from_user_id)
+            chatcore.send_video('170427-152312.mp4', from_user_id)
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
