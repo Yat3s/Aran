@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests, json, chatcore, io, time
+import requests, json, chatcore, io, time, random
 from config import *
 from utils import *
+from scrapy import *
 
 def auto_reply(msg, uid):
     if TULING_KEY:
@@ -29,7 +30,7 @@ def auto_reply(msg, uid):
         return u'我知道啦'
 
 def process_command(content, from_user_id, from_user_name):
-    isAdmin = from_user_name == ADMIN_NAME
+    isAdmin = (from_user_name == ADMIN_NAME) or OPEN_AUTH
 
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
@@ -67,7 +68,15 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.send(u'小萌是全世界最美的女孩子~Mua', from_user_id)
         return True
 
+
     ## Administrator command
+    if u'美女图' in content:
+        if isAdmin:
+            data = scrapy_data(u'http://mvpday.com/go/meizitu')
+            send_image(data[random.randrange(0, len(data)-1)], from_user_id)
+        else:
+            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
+        return True
     if u'[Search]' in content:
         if isAdmin:
             keyword = content[content.index(u']') + 1:]
@@ -120,6 +129,22 @@ def process_command(content, from_user_id, from_user_name):
         if isAdmin:
             chatcore.send(u"嘻嘻~稍等", from_user_id)
             chatcore.send_video(u'170427-153615.mp4', from_user_id)
+        else:
+            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
+        return True
+
+    if u'开放权限' in content:
+        if isAdmin:
+            OPEN_AUTH = True
+            chatcore.send(u"叶爸爸，权限已经开放啦~", from_user_id)
+        else:
+            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
+        return True
+
+    if u'关闭权限' in content:
+        if isAdmin:
+            OPEN_AUTH = False
+            chatcore.send(u"叶爸爸，权限已经关闭了~", from_user_id)
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
