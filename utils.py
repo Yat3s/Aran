@@ -18,6 +18,6 @@ def drawPic(text):
         processed_text += text[i * max_line_len : (i+1) * max_line_len] + '\n'
     im = Image.new("RGB", (width, line * 35), (255, 255, 255))
     dr = ImageDraw.Draw(im)
-    font = ImageFont.truetype("PingFang.ttc", font_size)
+    font = ImageFont.truetype("FZGLJW.TTF", font_size)
     dr.text((20, 5), processed_text, font=font, fill="#000000")
     im.save("t.png")
