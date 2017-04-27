@@ -77,6 +77,16 @@ def process_command(content, from_user_id, from_user_name):
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
+
+    if u'女优' in content:
+        if isAdmin:
+            data = scrapy_av()
+            random_item = random.randrange(0, len(data)-1)
+            send_image('http://mvpday.com' + data[random_item][1], from_user_id)
+            chatcore.send(u'这个女优是：' + data[random_item][0], from_user_id)
+        else:
+            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
+        return True
     if u'[Search]' in content:
         if isAdmin:
             keyword = content[content.index(u']') + 1:]
