@@ -54,7 +54,6 @@ def process_command(content, from_user_id, from_user_name):
     if u'黄图' in content or u'黄片' in content:
         for url in SEX_PIC_URL:
             send_image(url, from_user_id)
-            time.sleep(0.2)
         return True
     if u'[Alarm]' in content or u'提醒我' in content:
         time = content[content.index(u'提醒我') + 3:]
