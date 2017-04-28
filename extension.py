@@ -116,14 +116,14 @@ def process_command(content, from_user_id, from_user_name):
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
 
-    if u'[Info]' == content:
+    if u'Info' == content:
         if isAdmin:
             chatcore.send(jsonify(chatcore.search_friends()), from_user_id)
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
 
-    if u'[Friends]' == content:
+    if u'Friends' in content:
         if isAdmin:
             friends = chatcore.get_friends()
             friend_result = u'共计获取到 ' + str(len(friends)) + u' 位好友信息\n\n'
