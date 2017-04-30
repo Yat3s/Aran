@@ -51,8 +51,6 @@ def download_files(msg):
 def get_note(msg):
     if any(s in msg['Text'] for s in (u'红包', u'转账', u'Red packet')):
         chatcore.send(u'@Yat3s， 叶爸爸有人发红包了，快抢~', msg['FromUserName'])
-    else:
-        chatcore.send(msg['Text'], msg['FromUserName'])
 
 
 @chatcore.msg_register(FRIENDS)
