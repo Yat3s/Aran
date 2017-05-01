@@ -77,6 +77,10 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.send(u'小萌是我可爱的爸爸大大~Mua', from_user_id)
         return True
 
+    if u'梁肠美吗' in content:
+        chatcore.send(u'梁肠是全球最美的少女，鼻子最漂亮，身材最棒~嘻嘻', from_user_id)
+        return True
+
 
     ## Administrator command
     if u'美女图' in content:
