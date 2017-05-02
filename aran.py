@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import chatcore, time
+import chatcore, time, re
 from chatcore.content import *
 from extension import *
 from config import *
@@ -49,9 +49,18 @@ def download_files(msg):
 
 @chatcore.msg_register('Note', isGroupChat = True)
 def get_note(msg):
+    note = msg['Text']
+    re_invite = re.search(r'invited "\S+"', note)
+    re_join = re.search(r'"\S+"', note)
+    print 'Note -->', note
+    if re_invite:
+        invited_user = re_invite.group()[9:-1]
+        chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
+    if re_join:
+        invited_user = re_join.group()[1:-1]
+        chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
     if any(s in msg['Text'] for s in (u'红包', u'转账', u'Red packet')):
         chatcore.send(u'@Yat3s， 叶爸爸有人发红包了，快抢~', msg['FromUserName'])
-
 
 @chatcore.msg_register(FRIENDS)
 def add_friend(msg):
