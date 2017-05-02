@@ -56,7 +56,7 @@ def get_note(msg):
     if re_invite:
         invited_user = re_invite.group()[9:-1]
         chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
-    if re_join:
+    elif re_join:
         invited_user = re_join.group()[1:-1]
         chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
     if any(s in msg['Text'] for s in (u'红包', u'转账', u'Red packet')):
