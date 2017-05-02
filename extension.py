@@ -171,6 +171,24 @@ def process_command(content, from_user_id, from_user_name):
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
+    if u'群信息' in content or u'群成员' in content:
+        if isAdmin:
+            reply = ''
+            group_info = chatcore.update_chatroom(from_user_id)
+            chat_room_owner_id = group_info['ChatRoomOwner']
+            chatRoomOwnerName = ''
+            memberList = group_info['MemberList']
+            if group_info['NickName']:
+                reply += u'群名称：' + group_info['NickName'] + u'\n----------------\n群成员：(' + str(len(memberList)) +')\n'
+            for member in memberList:
+                if chat_room_owner_id == member['UserName']:
+                    chatRoomOwnerName = member['NickName']
+                reply += member['NickName'] + u'\n'
+            reply += u'----------------\n群主：' + chatRoomOwnerName
+            chatcore.send(reply, from_user_id)
+        else:
+            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
+        return True
     return False
 
 def group_send(users, content):

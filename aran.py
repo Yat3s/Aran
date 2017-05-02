@@ -50,17 +50,23 @@ def download_files(msg):
 @chatcore.msg_register('Note', isGroupChat = True)
 def get_note(msg):
     note = msg['Text']
-    re_invite = re.search(r'invited "\S+"', note)
-    re_join = re.search(r'"\S+"', note)
     print 'Note -->', note
-    if re_invite:
-        invited_user = re_invite.group()[9:-1]
-        chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
-    elif re_join:
-        invited_user = re_join.group()[1:-1]
-        chatcore.send(u'欢迎欢迎 @' + invited_user + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
+
+    joined_names = get_note_name(note, 'joined')
+    if get_note_name(note, 'joined'):
+        chatcore.send(u'欢迎欢迎 @' + get_note_name(note, 'joined')[0] + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
+    elif get_note_name(note, 'to the group'):
+        chatcore.send(u'欢迎欢迎 @' + get_note_name(note, 'to the group')[0] + u' 加入群，有什么吩咐可以@我哦，嘻嘻~', msg['FromUserName'])
+    elif get_note_name(note, 'has recalled'):
+        print jsonify(msg)
+        chatcore.send(u'@' + get_note_name(note, 'has recalled')[0] + u' 你撤回了什么!!!', msg['FromUserName'])
+
     if any(s in msg['Text'] for s in (u'红包', u'转账', u'Red packet')):
         chatcore.send(u'@Yat3s， 叶爸爸有人发红包了，快抢~', msg['FromUserName'])
+
+def get_note_name(content, keyword):
+    pattern = re.compile('"(.*?)" ' + keyword, re.S)
+    return re.findall(pattern, content)
 
 @chatcore.msg_register(FRIENDS)
 def add_friend(msg):
