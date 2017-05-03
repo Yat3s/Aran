@@ -4,8 +4,9 @@ import requests, json, chatcore, io, time, random, re
 from config import *
 from utils import *
 from scrapy import *
+from db import *
 
-lastSequenceId = ''
+lastSequenceId = 'sessionId'
 def auto_reply(msg, uid):
     global lastSequenceId
     if msg.isdigit() :
@@ -43,6 +44,21 @@ def score(score, id):
 def process_command(content, from_user_id, from_user_name):
     isAdmin = (from_user_name == ADMIN_NAME)
     content = content.lstrip()
+    if u'createTable' in content:
+        createTable()
+        chatcore.send(u'Create success', from_user_id)
+        return True
+    if u'insertUser' in content:
+        insertUser(from_user_id, from_user_name, content[11:])
+        chatcore.send(u'insertUser Success :' + content[11:], from_user_id)
+        return True
+    if u'loadAllUser' in content:
+        chatcore.send(str(loadAllUser()), from_user_id)
+        return True
+    if u'querySSO' in content:
+        if querySSO(from_user_id):
+            chatcore.send(str(querySSO(from_user_id)[0])[3:-3], from_user_id)
+        return True
     ## Face emoji
     if re.match('\[\S+\]\Z', content):
         chatcore.send(content, from_user_id)
