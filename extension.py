@@ -5,31 +5,62 @@ from config import *
 from utils import *
 from scrapy import *
 
+lastSequenceId = ''
 def auto_reply(msg, uid):
     if TULING_KEY:
-        url = "http://www.tuling123.com/openapi/api"
-        user_id = uid.replace('@', '')[:30]
-        body = {'key': TULING_KEY, 'info': msg.encode('utf8'), 'userid': user_id}
-        r = requests.post(url, data = body)
-        respond = json.loads(r.text)
-        result = ''
-        code = respond['code']
-        text = respond['text']
-        if code == 100000: # TEXT
-            result = text
-        elif code == 200000: # URL
-            result = text + '\n' + respond['url']
-        elif code == 302000: # News list
-            for item in respond['list']:
-                result += u'【'+ item['source'] + u'】' + item['article'] + '\n' + item['detailurl'] + '\n\n'
-        elif code == 308000: # Cook menu
-            for item in respond['list']:
-                result += u'【'+ item['name'] + u'】' + item['info'] + '\n' + item['detailurl'] + '\n\n'
-        return result
+        # url = "http://www.tuling123.com/openapi/api"
+        # user_id = uid.replace('@', '')[:30]
+        # body = {'key': TULING_KEY, 'info': msg.encode('utf8'), 'userid': user_id}
+        # r = requests.post(url, data = body)
+        # respond = json.loads(r.text)
+        # result = ''
+        # code = respond['code']
+        # text = respond['text']
+        # if code == 100000: # TEXT
+        #     result = text
+        # elif code == 200000: # URL
+        #     result = text + '\n' + respond['url']
+        # elif code == 302000: # News list
+        #     for item in respond['list']:
+        #         result += u'【'+ item['source'] + u'】' + item['article'] + '\n' + item['detailurl'] + '\n\n'
+        # elif code == 308000: # Cook menu
+        #     for item in respond['list']:
+        #         result += u'【'+ item['name'] + u'】' + item['info'] + '\n' + item['detailurl'] + '\n\n'
+        # return result
+        global lastSequenceId
+        if msg.isdigit() :
+            if int(msg) > 0 and int(msg) < 6:
+                return score(msg, lastSequenceId)
+            else:
+                return u'你评的这个分有点飘吧....'
+        else:
+            url = "http://jnlu.jd.com/jnlu/getAiNlu.ajax"
+            params = {'sessionId': lastSequenceId, 'inputText' : msg.encode('utf8')}
+            headers = {'Cookie': 'sso.jd.com=39c9b9883e2545aea9c5ed5792dcde83;'}
+            r = requests.post(url, data = params, headers = headers)
+            respond = json.loads(r.text)
+            result = msg
+            data = respond['data']
+            if data:
+                type = data['type']
+                lastSequenceId = data['sequenceId']
+                if type == 'TYPE_STRING':
+                    result = data['responses']['string']
+                elif type == 'TYPE_MEDIA':
+                    result = u'[Media]' + data['responses']['string'] + '\n' + data['responses']['media']
+                return result
     else:
         return u'我知道啦'
 
-## return: if True intercept this action.
+def score(score, id):
+    url = "http://jnlu.jd.com/jnlu/userScore.ajax"
+    params = {'sequenceId': id, 'score' : score}
+    headers = {'Cookie': 'sso.jd.com=39c9b9883e2545aea9c5ed5792dcde83;'}
+    r = requests.post(url, data = params, headers = headers)
+    respond = json.loads(r.text)
+    return (u'么么哒~ 谢谢你的评分(' + score + u')，请拿好你的小票：\n' + id) if respond['success'] else u'评分失败'
+
+## return: if True consume this action.
 def process_command(content, from_user_id, from_user_name):
     isAdmin = (from_user_name == ADMIN_NAME)
     content = content.lstrip()
@@ -44,7 +75,7 @@ def process_command(content, from_user_id, from_user_name):
         return True
 
     if u'你的爸爸' in content:
-        chatcore.send(u'我的爸爸是美丽可爱的李小萌同学~嘻嘻[Hey]', from_user_id)
+        chatcore.send(u'我的爸爸是风流倜傥的老叶子同学~嘻嘻[Hey]', from_user_id)
         return True
 
     if u'加我加我' in content:
@@ -73,14 +104,24 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.send_image(chatcore.get_head_img(chatroomUserName=from_user_id), from_user_id)
         return True
 
-    if u'小萌' in content:
-        chatcore.send(u'小萌是我可爱的爸爸大大~Mua', from_user_id)
-        return True
-
     if u'梁肠美吗' in content:
         chatcore.send(u'梁肠是全球最美的少女，鼻子最漂亮，身材最棒~嘻嘻', from_user_id)
         return True
-
+    if u'群信息' in content or u'群成员' in content:
+        reply = ''
+        group_info = chatcore.update_chatroom(from_user_id)
+        chat_room_owner_id = group_info['ChatRoomOwner']
+        chatRoomOwnerName = ''
+        memberList = group_info['MemberList']
+        if group_info['NickName']:
+            reply += u'群名称：' + group_info['NickName'] + u'\n----------------\n群成员：(' + str(len(memberList)) +')\n'
+        for member in memberList:
+            if chat_room_owner_id == member['UserName']:
+                chatRoomOwnerName = member['NickName']
+            reply += member['NickName'] + u'\n'
+        reply += u'----------------\n群主：' + chatRoomOwnerName
+        chatcore.send(reply, from_user_id)
+        return True
 
     ## Administrator command
     if u'美女图' in content:
@@ -171,24 +212,7 @@ def process_command(content, from_user_id, from_user_name):
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
-    if u'群信息' in content or u'群成员' in content:
-        if isAdmin:
-            reply = ''
-            group_info = chatcore.update_chatroom(from_user_id)
-            chat_room_owner_id = group_info['ChatRoomOwner']
-            chatRoomOwnerName = ''
-            memberList = group_info['MemberList']
-            if group_info['NickName']:
-                reply += u'群名称：' + group_info['NickName'] + u'\n----------------\n群成员：(' + str(len(memberList)) +')\n'
-            for member in memberList:
-                if chat_room_owner_id == member['UserName']:
-                    chatRoomOwnerName = member['NickName']
-                reply += member['NickName'] + u'\n'
-            reply += u'----------------\n群主：' + chatRoomOwnerName
-            chatcore.send(reply, from_user_id)
-        else:
-            chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
-        return True
+
     return False
 
 def group_send(users, content):
