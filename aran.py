@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import chatcore, time, re
+import chatcore, time, re, time, os
 from chatcore.content import *
 from extension import *
 from config import *
 from utils import *
+from face import *
 
 @chatcore.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def text_reply(msg):
@@ -43,8 +44,12 @@ def text_reply(msg):
 
 @chatcore.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
-    msg['Text'](msg['FileName']) ## Download File
-    result = '@%s@%s' % ({'Picture': 'img', 'Video': 'vid'}.get(msg['Type'], 'fil'), msg['FileName']) ## Reply to sender
+    fileName = msg['FileName']
+    msg['Text'](fileName) ## Download File
+    dectFaceAndEyes(fileName)
+    os.remove(fileName)
+    chatcore.send_image('processed_img.jpg', msg['FromUserName'])
+    result = u'我帮你标记了脸和眼睛，你看看对不对，(*^__^*) 嘻嘻……' ## Reply to sender
     return result
 
 @chatcore.msg_register('Note', isGroupChat = True)
