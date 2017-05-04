@@ -47,9 +47,9 @@ def download_files(msg):
     fileName = msg['FileName']
     msg['Text'](fileName) ## Download File
     dectFaceAndEyes(fileName)
-    os.remove(fileName)
     chatcore.send_image('processed_img.jpg', msg['FromUserName'])
-    result = u'我帮你标记了脸和眼睛，你看看对不对，(*^__^*) 嘻嘻……' ## Reply to sender
+    result = u'我帮你标记了一些东西，你看看对不对，(*^__^*) 嘻嘻……' ## Reply to sender
+    os.remove(fileName)
     return result
 
 @chatcore.msg_register('Note', isGroupChat = True)
