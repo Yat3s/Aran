@@ -42,7 +42,7 @@ def text_reply(msg):
                 print '[Group] ', 'Aran', '\t ===> ', reply, '[CMD]' if intercept_cmd else '[Auto]'
 
 
-@chatcore.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
+@chatcore.msg_register([PICTURE], isGroupChat = True)
 def download_files(msg):
     fileName = msg['FileName']
     msg['Text'](fileName) ## Download File
