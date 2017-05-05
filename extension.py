@@ -94,7 +94,7 @@ def process_command(content, from_user_id, from_user_name):
         return True
 
     ## Administrator command
-    if u'美女图' in content:
+    if u'美女' in content:
         if isAdmin:
             data = scrapy_data(u'http://mvpday.com/go/meizitu')
             send_image(data[random.randrange(0, len(data)-1)], from_user_id)
