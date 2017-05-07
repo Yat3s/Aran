@@ -2,8 +2,9 @@
 
 import re
 
-result = re.match('\[\S+\!?]\Z', '[你好]')
+result = re.match('\[\]\Z', '[你好]')
 if result:
     print result.group();
 else:
-    print 'No find'
+    print 'No find\n'
+    
