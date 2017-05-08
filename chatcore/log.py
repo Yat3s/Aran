@@ -6,7 +6,7 @@ class LogSystem(object):
     loggingLevel = logging.INFO
     loggingFile = None
     def __init__(self):
-        self.logger = logging.getLogger('itchat')
+        self.logger = logging.getLogger('chatcore')
         self.logger.addHandler(logging.NullHandler())
         self.logger.setLevel(self.loggingLevel)
         self.cmdHandler = logging.StreamHandler()

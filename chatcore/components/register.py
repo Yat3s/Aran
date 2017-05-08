@@ -8,7 +8,7 @@ from ..log import set_logging
 from ..utils import test_connect
 from ..storage import templates
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 def load_register(core):
     core.auto_login       = auto_login
@@ -16,7 +16,7 @@ def load_register(core):
     core.msg_register     = msg_register
     core.run              = run
 
-def auto_login(self, hotReload=False, statusStorageDir='itchat.pkl',
+def auto_login(self, hotReload=False, statusStorageDir='chatcore.pkl',
         enableCmdQR=False, picDir=None, qrCallback=None,
         loginCallback=None, exitCallback=None):
     if not test_connect():
@@ -93,7 +93,7 @@ def run(self, debug=False, blockThread=True):
             if self.useHotReload:
                 self.dump_login_status()
             self.alive = False
-            logger.debug('itchat received an ^C and exit.')
+            logger.debug('chatcore received an ^C and exit.')
             logger.info('Bye~')
     if blockThread:
         reply_fn()

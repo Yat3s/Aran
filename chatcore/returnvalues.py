@@ -4,7 +4,7 @@ import sys
 TRANSLATE = 'Chinese'
 
 class ReturnValue(dict):
-    ''' turn return value of itchat into a boolean value
+    ''' turn return value of chatcore into a boolean value
     for requests:
         ..code::python
 
@@ -53,7 +53,7 @@ class ReturnValue(dict):
         return '{%s}' % ', '.join(
             ['%s: %s' % (repr(k),repr(v)) for k,v in self.items()])
     def __repr__(self):
-        return '<ItchatReturnValue: %s>' % self.__str__()
+        return '<chatcoreReturnValue: %s>' % self.__str__()
 
 TRANSLATION = {
     'Chinese': {

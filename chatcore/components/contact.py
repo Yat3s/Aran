@@ -9,7 +9,7 @@ from ..returnvalues import ReturnValue
 from ..storage import contact_change, templates
 from ..utils import update_info_dict
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 def load_contact(core):
     core.update_chatroom             = update_chatroom
@@ -234,7 +234,7 @@ def update_local_uin(core, msg):
                         if newChatroomDict is None:
                             newChatroomDict = utils.struct_friend_info({
                                 'UserName': username,
-                                'Uin': uin, 
+                                'Uin': uin,
                                 'Self': copy.deepcopy(core.loginInfo['User'])})
                             core.chatroomList.append(newChatroomDict)
                         else:

@@ -4,7 +4,7 @@ from weakref import ref
 from ..returnvalues import ReturnValue
 from ..utils import update_info_dict
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 class AttributeDict(dict):
     def __getattr__(self, value):
@@ -20,9 +20,9 @@ class AttributeDict(dict):
         except KeyError:
             return d
 
-class UnInitializedItchat(object):
+class UnInitializedchatcore(object):
     def _raise_error(self, *args, **kwargs):
-        logger.warning('An itchat instance is called before initialized')
+        logger.warning('An chatcore instance is called before initialized')
     def __getattr__(self, value):
         return self._raise_error
 
@@ -33,7 +33,7 @@ class ContactList(list):
         self.__setstate__(None)
     @property
     def core(self):
-        return getattr(self, '_core', lambda: fakeItchat)() or fakeItchat
+        return getattr(self, '_core', lambda: fakechatcore)() or fakechatcore
     @core.setter
     def core(self, value):
         self._core = ref(value)
@@ -70,7 +70,7 @@ class AbstractUserDict(AttributeDict):
         super(AbstractUserDict, self).__init__(*args, **kwargs)
     @property
     def core(self):
-        return getattr(self, '_core', lambda: fakeItchat)() or fakeItchat
+        return getattr(self, '_core', lambda: fakechatcore)() or fakechatcore
     @core.setter
     def core(self, value):
         self._core = ref(value)
@@ -189,7 +189,7 @@ class Chatroom(AbstractUserDict):
         self['MemberList'] = memberList
     @property
     def core(self):
-        return getattr(self, '_core', lambda: fakeItchat)() or fakeItchat
+        return getattr(self, '_core', lambda: fakechatcore)() or fakechatcore
     @core.setter
     def core(self, value):
         self._core = ref(value)
@@ -317,6 +317,6 @@ def wrap_user_dict(d):
         r = MassivePlatform(d)
     return r
 
-fakeItchat = UnInitializedItchat()
+fakechatcore = UnInitializedchatcore()
 fakeContactList = ContactList()
 fakeChatroom = Chatroom()

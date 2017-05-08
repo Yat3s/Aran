@@ -13,7 +13,7 @@ from ..storage.templates import wrap_user_dict
 from .contact import update_local_chatrooms, update_local_friends
 from .messages import produce_msg
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 def load_login(core):
     core.login             = login
@@ -29,7 +29,7 @@ def load_login(core):
 def login(self, enableCmdQR=False, picDir=None, qrCallback=None,
         loginCallback=None, exitCallback=None):
     if self.alive or self.isLogging:
-        logger.warning('itchat has already logged in.')
+        logger.warning('chatcore has already logged in.')
         return
     self.isLogging = True
     while self.isLogging:

@@ -6,7 +6,7 @@ except ImportError:
 
 from .templates import AttributeDict
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 class Queue(queue.Queue):
     def put(self, message):

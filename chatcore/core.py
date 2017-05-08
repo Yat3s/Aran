@@ -27,7 +27,7 @@ class Core(object):
         self.s = requests.Session()
         self.uuid = None
         self.functionDict = {'FriendChat': {}, 'GroupChat': {}, 'MpChat': {}}
-        self.useHotReload, self.hotReloadDir = False, 'itchat.pkl'
+        self.useHotReload, self.hotReloadDir = False, 'chatcore.pkl'
         self.receivingRetryCount = 5
     def login(self, enableCmdQR=False, picDir=None, qrCallback=None,
             loginCallback=None, exitCallback=None):
@@ -48,8 +48,8 @@ class Core(object):
             for usage
                 ..code::python
 
-                    import itchat
-                    itchat.login()
+                    import chatcore
+                    chatcore.login()
 
             it is defined in components/login.py
             and of course every single move in login can be called outside
@@ -295,9 +295,9 @@ class Core(object):
             for demo
                 .. code:: python
 
-                    @itchat.msg_register(itchat.content.CARD)
+                    @chatcore.msg_register(chatcore.content.CARD)
                     def reply(msg):
-                        itchat.send_raw_msg(msg['MsgType'], msg['Content'], msg['FromUserName'])
+                        chatcore.send_raw_msg(msg['MsgType'], msg['Content'], msg['FromUserName'])
 
             there are some little tricks here, you may discover them yourself
             but remember they are tricks
@@ -388,7 +388,7 @@ class Core(object):
             it is defined in components/hotreload.py
         '''
         raise NotImplementedError()
-    def auto_login(self, hotReload=False, statusStorageDir='itchat.pkl',
+    def auto_login(self, hotReload=False, statusStorageDir='chatcore.pkl',
             enableCmdQR=False, picDir=None, qrCallback=None,
             loginCallback=None, exitCallback=None):
         ''' log in like web wechat does
@@ -410,8 +410,8 @@ class Core(object):
             for usage
                 ..code::python
 
-                    import itchat
-                    itchat.auto_login()
+                    import chatcore
+                    chatcore.auto_login()
 
             it is defined in components/register.py
             and of course every single move in login can be called outside

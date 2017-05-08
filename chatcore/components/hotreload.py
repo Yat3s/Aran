@@ -9,7 +9,7 @@ from ..storage import templates
 from .contact import update_local_chatrooms, update_local_friends
 from .messages import produce_msg
 
-logger = logging.getLogger('itchat')
+logger = logging.getLogger('chatcore')
 
 def load_hotreload(core):
     core.dump_login_status = dump_login_status
@@ -19,7 +19,7 @@ def dump_login_status(self, fileDir=None):
     fileDir = fileDir or self.hotReloadDir
     try:
         with open(fileDir, 'w') as f:
-            f.write('itchat - DELETE THIS')
+            f.write('chatcore - DELETE THIS')
         os.remove(fileDir)
     except:
         raise Exception('Incorrect fileDir')
@@ -44,7 +44,7 @@ def load_login_status(self, fileDir,
             'Ret': -1002, }})
 
     if j.get('version', '') != VERSION:
-        logger.debug(('you have updated itchat from %s to %s, ' + 
+        logger.debug(('you have updated chatcore from %s to %s, ' + 
             'so cached status is ignored') % (
             j.get('version', 'old version'), VERSION))
         return ReturnValue({'BaseResponse': {
@@ -96,4 +96,4 @@ def load_last_login_status(session, cookiesDict):
             'MM_WX_SOUND_STATE': '1', })
     except:
         logger.info('Load status for push login failed, we may have experienced a cookies change.')
-        logger.info('If you are using the newest version of itchat, you may report a bug.')
+        logger.info('If you are using the newest version of chatcore, you may report a bug.')
