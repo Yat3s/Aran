@@ -73,10 +73,6 @@ def process_command(content, from_user_id, from_user_name):
     if u'头像' in content:
         chatcore.send_image(chatcore.get_head_img(chatroomUserName=from_user_id), from_user_id)
         return True
-
-    if u'梁肠美吗' in content:
-        chatcore.send(u'梁肠是全球最美的少女，鼻子最漂亮，身材最棒~嘻嘻', from_user_id)
-        return True
     if u'群信息' in content or u'群成员' in content:
         reply = ''
         group_info = chatcore.update_chatroom(from_user_id)
