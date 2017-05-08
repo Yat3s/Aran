@@ -20,4 +20,4 @@ def drawPic(text):
     dr = ImageDraw.Draw(im)
     font = ImageFont.truetype("FZGLJW.TTF", font_size)
     dr.text((20, 5), processed_text, font=font, fill="#000000")
-    im.save("t.png")
+    im.save("assets/draw_pic.png")

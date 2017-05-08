@@ -44,11 +44,15 @@ def text_reply(msg):
 
 @chatcore.msg_register([PICTURE], isGroupChat = True)
 def download_files(msg):
-    fileName = msg['FileName']
+    fileName = 'assets/' + msg['FileName']
+    print '[Picture] --->', fileName
     msg['Text'](fileName) ## Download File
-    dectFaceAndEyes(fileName)
-    chatcore.send_image('processed_img.jpg', msg['FromUserName'])
-    result = u'我帮你标记了一些东西，你看看对不对，(*^__^*) 嘻嘻……' ## Reply to sender
+    result = u'我更喜欢看帅哥/美女的照片哦，嘻嘻~'
+    faceCount = detectFaceAndEyes(fileName)
+    if faceCount > 0 :
+        print '[Picture] --->', fileName, 'Detect ' + str(faceCount) + 'face(s)'
+        chatcore.send_image('assets/processed_img.jpg', msg['FromUserName'])
+        result = u'发现了' + str(faceCount) + u'张美丽帅气的脸蛋儿，(*^__^*) 嘻嘻……' ## Reply to sender
     os.remove(fileName)
     return result
 

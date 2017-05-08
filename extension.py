@@ -60,7 +60,7 @@ def process_command(content, from_user_id, from_user_name):
         return True
     if u'Draw' in content or u'draw' in content:
         drawPic(content[4:])
-        chatcore.send_image(fileDir='t.png', toUserName=from_user_id)
+        chatcore.send_image(fileDir='assets/draw_pic.png', toUserName=from_user_id)
         return True
     if u'黄图' in content or u'黄片' in content:
         for url in SEX_PIC_URL:
@@ -162,7 +162,7 @@ def process_command(content, from_user_id, from_user_name):
     if u'每日福利' in content:
         if isAdmin:
             chatcore.send(u"嘻嘻~稍等", from_user_id)
-            chatcore.send_video(u'170427-153615.mp4', from_user_id)
+            chatcore.send_video(u'assets/170427-153615.mp4', from_user_id)
         else:
             chatcore.send(u'这个指令爸爸说了不能给别人用哦TT', from_user_id)
         return True
