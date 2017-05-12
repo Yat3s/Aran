@@ -47,7 +47,7 @@ def download_files(msg):
     fileName = 'assets/' + msg['FileName']
     print '[Picture] --->', fileName
     msg['Text'](fileName) ## Download File
-    result = u'我更喜欢看帅哥/美女的照片哦，嘻嘻~'
+    result = u''
     faceCount = detectFaceAndEyes(fileName)
     if faceCount > 0 :
         print '[Picture] --->', fileName, 'Detect ' + str(faceCount) + 'face(s)'
