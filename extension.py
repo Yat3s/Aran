@@ -55,9 +55,6 @@ def process_command(content, from_user_id, from_user_name):
     if u'自我介绍' in content or u'打个招呼' in content or 'help' in content:
         chatcore.send(GROUP_HELP, from_user_id)
         return True
-    if u'色情网站' in content or u'黄色网站' in content:
-        chatcore.send(u'你可以看看1024，tumblr，91，草榴，等等，如果想知道更多，可以联系我爸爸哦嘻嘻ლ(＾ω＾ლ)', from_user_id)
-        return True
     if u'Draw' in content or u'draw' in content:
         drawPic(content[4:])
         chatcore.send_image(fileDir='assets/draw_pic.png', toUserName=from_user_id)
