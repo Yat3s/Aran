@@ -17,7 +17,7 @@ def auto_reply(msg, uid):
     else:
         url = "http://jnlu.jd.com/jnlu/getAiNlu.ajax"
         params = {'sessionId': lastSequenceId, 'inputText' : msg.encode('utf8')}
-        headers = {'Cookie': 'sso.jd.com=39c9b9883e2545aea9c5ed5792dcde83;'}
+        headers = {'Cookie': 'sso.jd.com=31241a9e0b734704b5b9c27144ec7b0b'}
         r = requests.post(url, data = params, headers = headers)
         respond = json.loads(r.text)
         result = msg
@@ -35,7 +35,7 @@ def auto_reply(msg, uid):
 def score(score, id):
     url = "http://jnlu.jd.com/jnlu/userScore.ajax"
     params = {'sequenceId': id, 'score' : score}
-    headers = {'Cookie': 'sso.jd.com=39c9b9883e2545aea9c5ed5792dcde83;'}
+    headers = {'Cookie': 'sso.jd.com=31241a9e0b734704b5b9c27144ec7b0b'}
     r = requests.post(url, data = params, headers = headers)
     respond = json.loads(r.text)
     return (u'么么哒~ 谢谢你的评分(' + score + u')，请拿好你的小票：\n' + id) if respond['success'] else u'评分失败'
