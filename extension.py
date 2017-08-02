@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests, json, chatcore, io, time, random, re, ConfigParser, os
+import sys,requests, json, chatcore, io, time, random, re, ConfigParser, os
 from config import *
 from utils import *
 from scrapy import *
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 lastSequenceId = ''
 def auto_reply(msg, uid):
@@ -40,9 +42,12 @@ def process_command(content, from_user_id, from_user_name):
         return True
 
     if u'狼人杀' in content:
-        msg = u'嘻嘻，帮你找到了最近的狼人杀局：\n' + getDate() + "\n"
+        msg = u'嘻嘻，帮你找到了最近的狼人杀局：\n' + getDate() + u"\n\n【出战人员如下】：\n"
+        position = 0
         for member in getMembers():
-            msg = msg + member + "\n"
+            position = position + 1
+            msg = msg + str(position) + ". " + member + "\n"
+        msg = msg + u"\n你可以跟我说‘报名’就可以一起参与到和大神的狼人杀比赛啦~"
         chatcore.send(msg, from_user_id)
         return True
 
@@ -213,7 +218,6 @@ def getMembers():
     return cf.get("configure", "member").encode('utf-8').split(",")
 
 def addMember(name):
-    print name
     cf = ConfigParser.ConfigParser()
     cf.read("were.ini")
     member = cf.get("configure", "member")
@@ -221,9 +225,8 @@ def addMember(name):
         return u'大哥你不是已经报名了吗？'
     else:
         cf.set("configure", "member", member + "," + name.encode('utf-8'))
-        print member.split(",")
         writeConfig(cf);
-        return u'已经用笔帮你记在小本本上啦~ 记得要准时到哦'
+        return u'@' + name + u' 已经用笔帮你记在小本本上啦~' + getDate() + u' 我们不见不散哦！'
 
 def writeConfig(cf):
     with open("were.ini","w+") as f:
