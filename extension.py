@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests, json, chatcore, io, time, random, re
+import requests, json, chatcore, io, time, random, re, ConfigParser, os
 from config import *
 from utils import *
 from scrapy import *
@@ -39,9 +39,20 @@ def process_command(content, from_user_id, from_user_name):
         chatcore.send(content, from_user_id)
         return True
 
+    if u'狼人杀' in content:
+        msg = u'嘻嘻，帮你找到了最近的狼人杀局：\n' + getDate() + "\n"
+        for member in getMembers():
+            msg = msg + member + "\n"
+        chatcore.send(msg, from_user_id)
+        return True
+
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
         chatcore.send(u'嘻嘻ლ(＾ω＾ლ)，你觉得我好看吗？[Shy]', from_user_id)
+        return True
+
+    if u'报名' in content:
+        chatcore.send(addMember(from_user_name), from_user_id)
         return True
 
     if u'你的爸爸' in content:
@@ -190,3 +201,30 @@ def send_image(url, from_user_id):
         imageStorage.write(block)
     imageStorage.seek(0)
     chatcore.send_image(imageStorage, from_user_id)
+
+def getDate():
+    cf = ConfigParser.ConfigParser()
+    cf.read("were.ini")
+    return cf.get("configure", "date")
+
+def getMembers():
+    cf = ConfigParser.ConfigParser()
+    cf.read("were.ini")
+    return cf.get("configure", "member").encode('utf-8').split(",")
+
+def addMember(name):
+    print name
+    cf = ConfigParser.ConfigParser()
+    cf.read("were.ini")
+    member = cf.get("configure", "member")
+    if name in member.split(","):
+        return u'大哥你不是已经报名了吗？'
+    else:
+        cf.set("configure", "member", member + "," + name.encode('utf-8'))
+        print member.split(",")
+        writeConfig(cf);
+        return u'已经用笔帮你记在小本本上啦~ 记得要准时到哦'
+
+def writeConfig(cf):
+    with open("were.ini","w+") as f:
+        cf.write(f)
