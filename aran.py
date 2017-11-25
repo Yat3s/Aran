@@ -82,5 +82,5 @@ def add_friend(msg):
     chatcore.add_friend(**msg['Text'])
     chatcore.send_msg(u'Hi\n, Wow又认识一位新朋友好开心，好开心~Mua', msg['RecommendInfo']['UserName'])
 
-chatcore.auto_login(True)
+chatcore.auto_login(False)
 chatcore.run()

@@ -4,7 +4,7 @@
 TULING_KEY = "c697910a18b540d4a63838871ee9a671"
 DEBUG = True
 NAME = 'Aran'
-AVATAR = 'http://img.67.com/upload/images/2016/05/26/aGV5YW96aG91MTQ2NDI0Njk3NQ==.jpg'
+AVATAR = 'https://pbs.twimg.com/media/C7Q0Ea5U4AAarUL.jpg:large'
 ADMIN_NAME = u'Yat3s'
 
 SEX_PIC_URL = [\
