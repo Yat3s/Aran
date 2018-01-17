@@ -2,6 +2,7 @@
 import urllib
 import urllib2
 import re
+import requests, json
 
 page = 1
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
@@ -23,13 +24,32 @@ def scrapy_data(url):
             print e.reason
     return result
 
-#     <ul class="product01">
-#   <li>
-#   <a href="http://mvpday.com/av/19.html" class="pic" title="波多野结衣"><img src="/i/boduoyejieyi.jpg" alt="波多野结衣"></a>
-#   <a href="http://mvpday.com/av/19.html" class="pic" title="波多野结衣"><h2>波多野结衣</h2></a>
-#   <span>人气:23689</span>
-# </li>
-#   </ul>
+def load_coin_info(coin_text):
+    btc_url = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'
+    btc_r = requests.get(btc_url)
+    btc_respond = json.loads(btc_r.text)
+    btc_price = float(btc_respond['price'])
+
+    coin_text = coin_text.upper()
+    baseurl = 'https://api.binance.com/api/v3/ticker/price?symbol='
+    coins = [coin_text + 'BTC', coin_text + "ETH",  coin_text + "USDT"]
+    result = ''
+    price_cny = 0.0
+    for coin in coins:
+        r = requests.get(baseurl + coin)
+        if 'code' not in r.text:
+            respond = json.loads(r.text)
+            name = respond['symbol']
+            price = respond['price']
+            if 'BTC' in name :
+                if coin == 'BTCUSDT':
+                    price_cny = float(price) * 6.5
+                else:
+                    price_cny = btc_price * float(price) * 6.5
+            result = result + name + '==>' + price + "\n" ;
+    if not result:
+         result = u'未找到'+coin_text + u'相关数据'
+    return result + u'约¥' + str(price_cny) + u'元'
 
 def scrapy_av():
     url = 'http://mvpday.com/av'

@@ -36,7 +36,13 @@ def auto_reply(msg, uid):
 def process_command(content, from_user_id, from_user_name):
     isAdmin = (from_user_name == ADMIN_NAME)
     content = content.lstrip()
+    print content
     ## Face emoji
+    if re.match('[A-Za-z]{3}', content):
+        result = '@' + from_user_name + '\n' + load_coin_info(content)
+        chatcore.send(result, from_user_id)
+        return True
+
     if re.match('\[\S+\]\Z', content):
         chatcore.send(content, from_user_id)
         return True
