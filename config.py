@@ -5,7 +5,9 @@ TULING_KEY = "c697910a18b540d4a63838871ee9a671"
 DEBUG = True
 NAME = 'Aran'
 AVATAR = 'https://gss3.bdstatic.com/7Po3dSag_xI4khGkpoWK1HF6hhy/baike/whfpf%3D180%2C140%2C50/sign=66b4bcb66c09c93d07a75db7f900c9e4/8c1001e93901213f17adb8645fe736d12e2e95e8.jpg'
-ADMIN_NAME = u'Yat3s'
+ADMIN_NAME = u'风云雄霸天下'
+
+KEYS = [u'通知', u'开多', u'开空', u'涨', u'跌', u'震荡', u'今晚', u'明天', u'1/10']
 
 SEX_PIC_URL = [\
 'http://i4.buimg.com/4851/5388a44f9afe566e.jpg', \

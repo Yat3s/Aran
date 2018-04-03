@@ -43,29 +43,25 @@ def process_command(content, from_user_id, from_user_name):
     #     chatcore.send(result, from_user_id)
     #     return True
 
-
-    if u'小福利' in content:
-        msg = u'嘻嘻，帮你找到了最近的情报消息：\n' + getDate() + u"\n\n【消息如下】：\n"
-        position = 0
-        for message in getMessages():
-            position = position + 1
-            msg = msg + str(position) + ". " + message + "\n"
+    if u'情报' in content:
+        msg = getOkexMessage()
         chatcore.send(msg, from_user_id)
         return True
-
-    if u'重要消息' in content and isAdmin:
-        msg = "已经将消息：\n" + content + "\n 通过短信通知给群成员(成员电话可在数据库配置)"
-        chatcore.send(msg, from_user_id)
 
     if isAdmin:
-        addMessage(content)
-        chatcore.send(u'已经记录情报:\n\n[' + content + "] \n\n跟我说“小福利”获取最近情报哦~嘻嘻", from_user_id)
-        return True
+        find = False
+        for key in KEYS:
+            if key in content:
+                find = True
+                break
+        if find:
+            sendOkexMessage(content)
+            chatcore.send(u'已经记录情报并短信通知:\n\n[' + content + "] \n\n跟我说“情报”获取最近福利哦~嘻嘻", from_user_id)
+            return True
 
-    if re.match('\[\S+\]\Z', content):
-        chatcore.send(acontent, from_user_id)
-        return True
-
+    # if re.match('\[\S+\]\Z', content):
+    #     chatcore.send(load_coin_info(content), from_user_id)
+    #     return True
 
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)

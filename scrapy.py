@@ -24,6 +24,21 @@ def scrapy_data(url):
             print e.reason
     return result
 
+def getOkexMessage():
+    url = 'http://wexiner.com/wechat/getMsg'
+    r = requests.get(url)
+    respond = json.loads(r.text)
+    msg = u'最近的情报消息如下：\n\n'
+    for item in respond:
+        msg = msg + u'- 【' + item['content'] + u'】 -- ' + item['created_at'][5:-3] + '\n'
+    msg = msg + '\n 对我说“情报”获取最近的消息哦嘻嘻~'
+    return msg
+
+def sendOkexMessage(content):
+    url = 'http://wexiner.com/wechat/setMsg'
+    r = requests.post(url, data = {'content':content, 'type':'0'})
+    print r.text
+
 def load_coin_info(coin_text):
     btc_url = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'
     btc_r = requests.get(btc_url)
