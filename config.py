@@ -4,7 +4,7 @@
 TULING_KEY = "c697910a18b540d4a63838871ee9a671"
 DEBUG = True
 NAME = 'Aran'
-AVATAR = 'https://pbs.twimg.com/media/C7Q0Ea5U4AAarUL.jpg:large'
+AVATAR = 'https://gss3.bdstatic.com/7Po3dSag_xI4khGkpoWK1HF6hhy/baike/whfpf%3D180%2C140%2C50/sign=66b4bcb66c09c93d07a75db7f900c9e4/8c1001e93901213f17adb8645fe736d12e2e95e8.jpg'
 ADMIN_NAME = u'Yat3s'
 
 SEX_PIC_URL = [\

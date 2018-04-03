@@ -38,24 +38,34 @@ def process_command(content, from_user_id, from_user_name):
     content = content.lstrip()
     print content
     ## Face emoji
-    if re.match('[A-Za-z]{3}', content):
-        result = '@' + from_user_name + '\n' + load_coin_info(content)
-        chatcore.send(result, from_user_id)
+    # if re.match('[A-Za-z]{3}', content):
+    #     result = '@' + from_user_name + '\n' + load_coin_info(content)
+    #     chatcore.send(result, from_user_id)
+    #     return True
+
+
+    if u'小福利' in content:
+        msg = u'嘻嘻，帮你找到了最近的情报消息：\n' + getDate() + u"\n\n【消息如下】：\n"
+        position = 0
+        for message in getMessages():
+            position = position + 1
+            msg = msg + str(position) + ". " + message + "\n"
+        chatcore.send(msg, from_user_id)
+        return True
+
+    if u'重要消息' in content and isAdmin:
+        msg = "已经将消息：\n" + content + "\n 通过短信通知给群成员(成员电话可在数据库配置)"
+        chatcore.send(msg, from_user_id)
+
+    if isAdmin:
+        addMessage(content)
+        chatcore.send(u'已经记录情报:\n\n[' + content + "] \n\n跟我说“小福利”获取最近情报哦~嘻嘻", from_user_id)
         return True
 
     if re.match('\[\S+\]\Z', content):
-        chatcore.send(content, from_user_id)
+        chatcore.send(acontent, from_user_id)
         return True
 
-    if u'狼人杀' in content:
-        msg = u'嘻嘻，帮你找到了最近的狼人杀局：\n' + getDate() + u"\n\n【出战人员如下】：\n"
-        position = 0
-        for member in getMembers():
-            position = position + 1
-            msg = msg + str(position) + ". " + member + "\n"
-        msg = msg + u"\n你可以跟我说‘报名’就可以一起参与到和大神的狼人杀比赛啦~"
-        chatcore.send(msg, from_user_id)
-        return True
 
     if u'自拍' in content:
         send_image(AVATAR, from_user_id)
@@ -233,6 +243,18 @@ def addMember(name):
         cf.set("configure", "member", member + "," + name.encode('utf-8'))
         writeConfig(cf);
         return u'@' + name + u' 已经用笔帮你记在小本本上啦~' + getDate() + u' 我们不见不散哦！'
+
+def getMessages():
+    cf = ConfigParser.ConfigParser()
+    cf.read("were.ini")
+    return cf.get("configure", "message").encode('utf-8').split(",")
+
+def addMessage(msg):
+    cf = ConfigParser.ConfigParser()
+    cf.read("were.ini")
+    message = cf.get("configure", "message")
+    cf.set("configure", "message", message + "," + msg.encode('utf-8'))
+    writeConfig(cf);
 
 def writeConfig(cf):
     with open("were.ini","w+") as f:
